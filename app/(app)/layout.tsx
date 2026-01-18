@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
+import { UserNav } from "@/components/profile/user-nav";
 
 export default async function AppLayout({
   children,
@@ -8,7 +9,18 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+
+  // Fetch full user profile if authenticated
+  let userProfile = null;
+  if (authUser) {
+    const { data } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", authUser.id)
+      .single();
+    userProfile = data;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -17,15 +29,11 @@ export default async function AppLayout({
           <Link href="/tournaments" className="text-2xl font-bold">
             Quiniela
           </Link>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <Link href="/tournaments">
               <Button variant="ghost">Tournaments</Button>
             </Link>
-            {user && (
-              <Link href="/profile">
-                <Button variant="ghost">Profile</Button>
-              </Link>
-            )}
+            {userProfile && <UserNav user={userProfile} />}
           </div>
         </div>
       </nav>
