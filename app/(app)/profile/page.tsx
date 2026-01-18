@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { ProfileEditor } from "@/components/profile/profile-editor";
 import { User } from "@/types/database";
 import { uploadImage, generateImageFilename } from "@/lib/utils/image";
-import { Button } from "@/components/ui/button";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -64,12 +63,6 @@ export default function ProfilePage() {
     }
   }
 
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
-  }
-
   if (loading) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -84,11 +77,11 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-2xl">
-      <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8">
         <h1 className="text-4xl font-bold">Profile Settings</h1>
-        <Button variant="outline" onClick={handleLogout}>
-          Logout
-        </Button>
+        <p className="text-muted-foreground mt-2">
+          Manage your account settings and preferences
+        </p>
       </div>
       <ProfileEditor user={user} onUpdate={handleUpdate} />
     </div>
