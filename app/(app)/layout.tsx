@@ -14,12 +14,27 @@ export default async function AppLayout({
   // Fetch full user profile if authenticated
   let userProfile = null;
   if (authUser) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("users")
       .select("*")
       .eq("id", authUser.id)
       .single();
-    userProfile = data;
+
+    // If user profile doesn't exist, create it
+    if (error && error.code === 'PGRST116') {
+      const { data: newProfile } = await supabase
+        .from("users")
+        .insert({
+          id: authUser.id,
+          email: authUser.email!,
+          screen_name: authUser.user_metadata?.screen_name || null,
+        })
+        .select()
+        .single();
+      userProfile = newProfile;
+    } else {
+      userProfile = data;
+    }
   }
 
   return (
