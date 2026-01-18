@@ -1,0 +1,63 @@
+import { MatchWithTeams } from "@/types/database";
+import { Card, CardContent } from "@/components/ui/card";
+import { TeamBadge } from "@/components/teams/team-badge";
+import { Badge } from "@/components/ui/badge";
+import { formatLocalDateTime } from "@/lib/utils/date";
+
+interface MatchCardProps {
+  match: MatchWithTeams;
+}
+
+export function MatchCard({ match }: MatchCardProps) {
+  const isCompleted = match.status === "completed";
+  const isLive = match.status === "in_progress";
+
+  return (
+    <Card className={isLive ? "border-green-500 border-2" : ""}>
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          {/* Match Info */}
+          <div className="flex justify-between items-center">
+            <div className="text-sm text-muted-foreground">
+              {formatLocalDateTime(match.match_date)}
+            </div>
+            <Badge
+              variant={isLive ? "default" : "outline"}
+              className={isLive ? "bg-green-500" : ""}
+            >
+              {match.status.replace("_", " ")}
+            </Badge>
+          </div>
+
+          {/* Teams and Score */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
+              <TeamBadge team={match.home_team} size="md" showName={true} />
+            </div>
+
+            <div className="flex items-center gap-3 text-2xl font-bold">
+              <span className={!isCompleted ? "text-muted-foreground" : ""}>
+                {match.home_score ?? "-"}
+              </span>
+              <span className="text-muted-foreground">:</span>
+              <span className={!isCompleted ? "text-muted-foreground" : ""}>
+                {match.away_score ?? "-"}
+              </span>
+            </div>
+
+            <div className="flex-1 flex justify-end">
+              <TeamBadge team={match.away_team} size="md" showName={true} />
+            </div>
+          </div>
+
+          {/* Round */}
+          {match.round && (
+            <div className="text-center text-sm text-muted-foreground">
+              {match.round}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
