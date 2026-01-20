@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/utils/admin";
 import { TeamManagementList } from "@/components/teams/management/team-management-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -12,6 +13,12 @@ export default async function TeamsPage() {
 
   if (!user) {
     redirect("/login");
+  }
+
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/unauthorized");
   }
 
   const { data: teams } = await supabase

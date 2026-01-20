@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUTC } from "@/lib/utils/date";
+import { checkAdminPermission } from "@/lib/middleware/admin-check";
 
 export async function GET(
   request: NextRequest,
@@ -33,14 +34,12 @@ export async function PUT(
   { params }: { params: Promise<{ teamId: string }> }
 ) {
   try {
+    // Check admin permission
+    const adminError = await checkAdminPermission();
+    if (adminError) return adminError;
+
     const { teamId } = await params;
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const body = await request.json();
     const { name, short_name, country_code, logo_url } = body;
 
@@ -74,13 +73,12 @@ export async function DELETE(
   { params }: { params: Promise<{ teamId: string }> }
 ) {
   try {
+    // Check admin permission
+    const adminError = await checkAdminPermission();
+    if (adminError) return adminError;
+
     const { teamId } = await params;
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     // Check if team has participated in any matches
     const { data: homeMatches, error: homeMatchesError } = await supabase
