@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
+import { requireAdmin } from "@/lib/utils/admin";
 import { TeamDetailView } from "@/components/teams/management/team-detail-view";
 
 interface TeamDetailPageProps {
@@ -14,6 +15,12 @@ export default async function TeamDetailPage({ params }: TeamDetailPageProps) {
 
   if (!user) {
     redirect("/login");
+  }
+
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/unauthorized");
   }
 
   // Fetch team details

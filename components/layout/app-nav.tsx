@@ -39,14 +39,14 @@ export function AppNav({ user }: AppNavProps) {
               <Link href="/tournaments/manage">
                 <Button variant="ghost">Manage Tournaments</Button>
               </Link>
+              <Link href="/teams">
+                <Button variant="ghost">Teams</Button>
+              </Link>
               <Link href="/admin/users">
                 <Button variant="ghost">User Management</Button>
               </Link>
             </>
           )}
-          <Link href="/teams">
-            <Button variant="ghost">Teams</Button>
-          </Link>
           {user && <UserNav user={user} />}
         </div>
 

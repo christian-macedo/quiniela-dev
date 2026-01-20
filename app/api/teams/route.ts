@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { checkAdminPermission } from "@/lib/middleware/admin-check";
 
 export async function GET() {
   try {
@@ -24,13 +25,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check admin permission
+    const adminError = await checkAdminPermission();
+    if (adminError) return adminError;
+
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const body = await request.json();
     const { name, short_name, country_code, logo_url } = body;
 

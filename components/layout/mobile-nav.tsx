@@ -70,6 +70,11 @@ export function MobileNav({ user, onSignOut }: MobileNavProps) {
                       Manage Tournaments
                     </Button>
                   </Link>
+                  <Link href="/teams" onClick={closeMenu}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      Teams
+                    </Button>
+                  </Link>
                   <Link href="/admin/users" onClick={closeMenu}>
                     <Button variant="ghost" className="w-full justify-start">
                       User Management
@@ -77,12 +82,6 @@ export function MobileNav({ user, onSignOut }: MobileNavProps) {
                   </Link>
                 </>
               )}
-
-              <Link href="/teams" onClick={closeMenu}>
-                <Button variant="ghost" className="w-full justify-start">
-                  Teams
-                </Button>
-              </Link>
 
               {user && (
                 <>
