@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon } from "lucide-react";
 import { SunIcon } from "lucide-react";
@@ -7,21 +7,25 @@ const ThemeSwitcher = () =>{
     const {theme,setTheme, systemTheme} = useTheme();
     const [mounted,setMounted] = useState(false);
 
-    useCallback(() => setMounted(true), []);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     if(!mounted) return null;
 
     const current = theme == 'system' ? systemTheme : theme;
+    const isDark = current === "dark";
 
     return(
         <button
             aria-label="Toggle theme"
             role="switch"
-            onClick={() => setTheme (current == 'dark' ? 'light' : 'dark') }
-            className="p-2 rounded bg-gray-200 dark:bg-gray-800"
+            aria-checked={isDark}
+            onClick={() => setTheme (isDark ? 'light' : 'dark') }
+            className="p-2 rounded bg-gray-200 dark:bg-gray-800"        
 
         >
-            {current == 'dark' ? 'Dark' : 'Light' }
+            {isDark ? <SunIcon /> : <MoonIcon />}
         </button>
     );
 };

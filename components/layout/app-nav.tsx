@@ -7,7 +7,6 @@ import { UserNav } from "@/components/profile/user-nav";
 import { MobileNav } from "./mobile-nav";
 import { User } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
-import ThemeSwitcher  from "../../app/ThemeSwitcher";
 
 interface AppNavProps {
   user: User | null;
@@ -48,7 +47,6 @@ export function AppNav({ user }: AppNavProps) {
               </Link>
             </>
           )}
-          <ThemeSwitcher/>
           {user && <UserNav user={user} />}
         </div>
 
