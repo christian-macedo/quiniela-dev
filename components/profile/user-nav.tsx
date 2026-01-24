@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UserCircle, LogOut, Shield } from "lucide-react";
+import ThemeSwitcher  from "../../app/ThemeSwitcher";
 
 interface UserNavProps {
   user: User;
@@ -67,6 +68,10 @@ export function UserNav({ user }: UserNavProps) {
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+            <ThemeSwitcher/>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => router.push("/profile")}
